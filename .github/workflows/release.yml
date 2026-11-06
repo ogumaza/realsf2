@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: MIT
+
+# Push vX.Y.Z to publish a Windows x64 release. The tag must match the version in CMakeLists.txt.
+# Release notes come from docs/release-notes/X.Y.Z.md. The attached realsf2-X.Y.Z-win-x64.zip
+# contains realsf2.exe, README.md, LICENSE and THIRD-PARTY-NOTICES.md.
+#
+# Manual runs (Actions > Release > Run workflow) upload the same ZIP as a workflow artifact without
+# publishing a release.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Read the project version, check the tag if present, and require release notes.
+  version:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - id: version
+        uses: ./externals/xsflib/ci/release-version
+        with:
+          project: realsf2
+
+  windows:
+    needs: version
+    name: Windows x64
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: ./externals/xsflib/ci/release-windows
+        with:
+          version: ${{ needs.version.outputs.version }}
+          cmake: -A x64 -T ClangCL
+          targets: realsf2
+          programs: realsf2
+          files: build/Release/realsf2.exe
+          artifact: win-x64
+
+  package:
+    needs: [version, windows]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: ./externals/xsflib/ci/package-converter
+        with:
+          program: realsf2
+          version: ${{ needs.version.outputs.version }}
+
+      - uses: ./externals/xsflib/ci/release-publish
+        with:
+          title: realsf2
+          version: ${{ needs.version.outputs.version }}
+          artifact: realsf2-${{ needs.version.outputs.version }}
