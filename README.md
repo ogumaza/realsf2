@@ -85,6 +85,10 @@ A wave's level, tuning, loop and envelope go in the SoundFont. Velocity, CC7 and
 The performers write values that give the engine's level through that law. CC91 holds a channel's reverb send. Where a
 game's mixer takes a send's share from the dry level, CC11 holds that share too.
 
+The game plays every wave through the console's resampler, whose filters cut the highest frequencies: by about 2.3 dB
+at a quarter of a wave's sample rate and 7.4 dB at half of it, averaged over its 64 filters. realsf2 writes each wave
+through a filter with that average response, so the files start out as bright as the game.
+
 ### SoundFont
 
 SoundFont players apply 0.4 of a zone's initialAttenuation. The files take that into account: the generator holds 2.5
@@ -94,6 +98,10 @@ quiet.
 The game's pans are written for the sin/cos law of MIDI RP-036. The specification gives the default CC10 modulator an
 amount of 1000. Every player found plays 500. Each global zone therefore holds a CC10 modulator of amount 500 in place
 of the default one.
+
+A player's interpolation cuts the highest frequencies again. FluidSynth's 4-point interpolation, its default, plays the
+brightest waves about 2.5 dB quieter than the game does. Its 7th-order interpolation, which the shell command `interp 7`
+sets, comes within 0.1 dB.
 
 ### SFZ
 
@@ -111,6 +119,9 @@ documented curve, and its filters are set up for 48 kHz until the sample rate ch
   amplitude. No straight line of decibels meets such a ramp at both ends. For most games, realsf2 fits each release to
   the energy of the game's release. For Chameleon Twist 2, GoldenEye 007 and Hey You, Pikachu!, the fit follows the top
   20 dB of the game's ramp and leaves a tail.
+- The game's resampler picks one of its 64 filters by where it stands between two samples. realsf2 writes the average
+  of their responses. A note at a wave's recorded pitch stays on one filter, and the brightest waves play up to 2.3 dB
+  louder there in the game.
 - The game's reverb is left to the player. CC91 holds the send. A game's effect may sound stronger or weaker there.
 - Sound effects that a song starts stay out of the song.
 - Fades that the game's code starts during play stay out.
