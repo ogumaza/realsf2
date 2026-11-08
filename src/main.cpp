@@ -2,9 +2,9 @@
 
 // realsf2: convert the music of Nintendo 64 games to MIDI, SoundFont and SFZ.
 //
-//     realsf2 [options] <image.z64> [...]
+//     realsf2 [options] <image.z64 | set.zip | set folder> [...]
 //
-// Output goes beside each image. Windows accepts files dropped on the executable. macOS uses Realsf2.app.
+// Output goes beside each image or set. Windows accepts files dropped on the executable. macOS uses Realsf2.app.
 
 #include <cstddef>
 #include <cstdio>
@@ -36,15 +36,17 @@ void Usage()
     std::puts(
         "realsf2: convert the music of Nintendo 64 games to MIDI, SoundFont 2 and SFZ.\n"
         "\n"
-        "usage: realsf2 [options] <image> [...]\n"
+        "usage: realsf2 [options] <image or set> [...]\n"
         "\n"
-        "Give it a game's image (.z64, .n64 or .v64). Each sequence gets <name>.mid,\n"
-        "<name>.sf2, and per-track SFZ files in sfz/<name>. Shared samples go in\n"
-        "sfz/samples. Output is written to <image name>_realsf2 beside the image. You\n"
-        "can also drop files onto realsf2.exe on Windows or Realsf2.app on macOS.\n"
+        "Give it a game's image (.z64, .n64 or .v64), which may be in a ZIP archive, or\n"
+        "an Aleck64 game's ROM set as a ZIP archive or a folder of its chips. Each\n"
+        "sequence gets <name>.mid, <name>.sf2, and per-track SFZ files in sfz/<name>.\n"
+        "Shared samples go in sfz/samples. Output is written to\n"
+        "<image or set name>_realsf2 beside it. You can also drop files onto\n"
+        "realsf2.exe on Windows or Realsf2.app on macOS.\n"
         "\n"
         "options:\n"
-        "  --output DIR   write to DIR (one image only)\n"
+        "  --output DIR   write to DIR (one image or set only)\n"
         "  --only REGEX   convert matching sequence names (for example --only 0x19)\n"
         "  --loops N      repeat the main loop N times (default 1)\n"
         "                 MIDI loop markers are included for players that support them\n"
@@ -62,7 +64,7 @@ std::optional<Input> Open(const fs::path& input, const std::string&)
         return std::nullopt;
     }
 
-    return Input::Open(input);
+    return Input::Open(input, kProgram);
 }
 
 } // namespace
@@ -72,8 +74,8 @@ int main(int argc, char** argv)
     frame::Converter<PerformOptions, Input, Conversion> converter;
     converter.program = kProgram;
     converter.version_line = "realsf2 " REALSF2_VERSION;
-    converter.input_word = "image";
-    converter.folder_message = " is a folder: give an image of a game";
+    converter.input_word = "input";
+    converter.reads_folders = true;
     converter.samples_folder = seqlib::sfz::kSamplesFolder;
     converter.usage = Usage;
     converter.open = Open;

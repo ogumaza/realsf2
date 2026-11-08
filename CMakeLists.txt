@@ -3,19 +3,20 @@
 cmake_minimum_required(VERSION 3.20)
 # realsf2 --version reports this version. The file properties of the Windows program and the Info.plist of the macOS
 # app show it too.
-project(realsf2 VERSION 1.0.1 LANGUAGES CXX)
+project(realsf2 VERSION 1.1.0 LANGUAGES CXX)
 
 # The submodules: seqlib writes the MIDI, SoundFont and SFZ files. ntdlib holds the conversion of the Nintendo 64's
 # sound data (ntdlib::sequence_export_n64) and the converters' command-line frame (ntdlib::sequence_export). xsflib
 # holds the common code that ntdlib builds on, and the CMake helpers. xsflib's XsflibProject.cmake sets the C++
 # standard, a release build by default, the static C runtime and the compiler options that keep the output the same on
-# every platform.
+# every platform. XSFLIB_ZLIB gives xsflib the zlib that its reader of ROM sets requires.
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/externals/xsflib/CMakeLists.txt")
   message(FATAL_ERROR "externals/xsflib is missing. Run: git submodule update --init")
 endif()
 include(externals/xsflib/cmake/XsflibProject.cmake)
 xsflib_project(WARNINGS_ON_EVERY_TARGET)
 set(NTDLIB_SEQUENCE_EXPORT ON)
+set(XSFLIB_ZLIB ON)
 xsflib_add_libraries(seqlib xsflib ntdlib)
 
 add_executable(realsf2 src/main.cpp)
@@ -27,8 +28,8 @@ xsflib_add_version(realsf2 VERSION ${PROJECT_VERSION} DEFINE REALSF2_VERSION
 # Finder cannot drop files onto a command-line executable. Package it in a macOS droplet app, with the version in its
 # Info.plist.
 xsflib_add_droplet_tool(realsf2 APP_NAME Realsf2 VERSION ${PROJECT_VERSION}
-                        DESCRIPTION "Drop Nintendo 64 images (.z64, .n64, .v64) here to convert their music to MIDI, SoundFont and SFZ. Output goes in a folder beside each image."
-                        PROMPT "Choose Nintendo 64 images (.z64, .n64, .v64) to convert:")
+                        DESCRIPTION "Drop Nintendo 64 images (.z64, .n64, .v64) or Aleck64 ROM sets (.zip) here to convert their music to MIDI, SoundFont and SFZ. Output goes in a folder beside each one."
+                        PROMPT "Choose Nintendo 64 images (.z64, .n64, .v64) or Aleck64 ROM sets (.zip) to convert:")
 
 include(CTest)
 if(BUILD_TESTING)

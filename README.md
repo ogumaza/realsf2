@@ -3,13 +3,13 @@
 realsf2 converts the music of Nintendo 64 games to MIDI, SoundFont 2 and SFZ. Each sequence gets a MIDI file and a
 SoundFont containing its instruments. SFZ output is written beside them.
 
-Drop images onto `realsf2.exe` on Windows or `Realsf2.app` on macOS. Output goes in a folder beside each image. From a
-terminal:
+Drop images or Aleck64 ROM sets onto `realsf2.exe` on Windows or `Realsf2.app` on macOS. Output goes in a folder beside
+each one. From a terminal:
 
 ```
-realsf2 [options] <image> [...]
+realsf2 [options] <image or set> [...]
 
-  --output DIR   write to DIR (one image only)
+  --output DIR   write to DIR (one image or set only)
   --only REGEX   convert matching sequence names (for example --only 0x19)
   --loops N      repeat the main loop N times (default 1)
                  MIDI loop markers are included for players that support them
@@ -19,8 +19,14 @@ realsf2 [options] <image> [...]
   --version      show the version
 ```
 
-An image can be in any of the usual byte orders (`.z64`, `.n64` or `.v64`). The default output folder is
-`<image name>_realsf2`, beside the image.
+An image can be in any of the usual byte orders (`.z64`, `.n64` or `.v64`). It may be in a ZIP archive, as the only
+file of the archive with one of those extensions. The default output folder is `<image name>_realsf2`, beside the
+image.
+
+A game of Seta's Aleck64, an arcade board built from the Nintendo 64's chips, comes as the ROM set of its board, not as
+a cartridge image. Give realsf2 the set as a ZIP archive or as a folder of its chips. realsf2 finds each chip of the
+game by its SHA-1 and size, whatever the file is called, and puts the image together from them. The output folder is
+named after the set.
 
 Each sequence gets these files:
 
@@ -53,6 +59,26 @@ assumes an output rate of 22050 Hz. A game may use another rate.
 | The Legend of Zelda: Majora's Mask | USA | EAD's engine, later form |
 | The Legend of Zelda: Ocarina of Time | USA, Rev 2 | EAD's engine, later form |
 | Wave Race 64 | USA, Rev 1 | EAD's engine, middle form |
+
+These games of the Aleck64 are supported too:
+
+| Game | Sound engine |
+|---|---|
+| Eleven Beat | The SDK's compressed sequence player, under Hudson's sound code |
+| Hi Pai Paradise | The N64 Music Tools |
+| Mayjinsen 3 | The SDK's compressed sequence player |
+| Star Soldier: Vanishing Earth | The SDK's compressed sequence player, under Hudson's sound code |
+| Super Real Mahjong VS | The SDK's compressed sequence player |
+| Tower & Shaft | The N64 Music Tools |
+| Vivid Dolls | The SDK's compressed sequence player |
+
+Super Real Mahjong VS plays its music in mono or in stereo. A setting in the game's service menu picks which, and the
+game plays mono until someone changes it. realsf2 converts both versions. The mono songs come first, and each stereo
+song has "(stereo)" after its name.
+
+Four more Aleck64 games play each song as one long recording, streamed from the cartridge: Hanabi de Doon! - Don-chan
+Puzzle, Hi Pai Paradise 2, Kurukuru Fever and Magical Tetris Challenge. They have no sequences to convert, so realsf2
+says so and writes nothing. usf's `usfrip` rips the music of all eleven Aleck64 games as the board plays it.
 
 ## Drag and drop
 
@@ -123,6 +149,8 @@ documented curve, and its filters are set up for 48 kHz until the sample rate ch
   of their responses. A note at a wave's recorded pitch stays on one filter, and the brightest waves play up to 2.3 dB
   louder there in the game.
 - The game's reverb is left to the player. CC91 holds the send. A game's effect may sound stronger or weaker there.
+- A MIDI file holds 16 channels. A song with more, such as most of Hi Pai Paradise's, puts two of its channels on one
+  track. Where their notes meet, they share the track's controllers, so one of them can play at the other's level.
 - Sound effects that a song starts stay out of the song.
 - Fades that the game's code starts during play stay out.
 - A song whose tracks loop at different lengths runs to their least common multiple, up to a cut at 15 minutes.
