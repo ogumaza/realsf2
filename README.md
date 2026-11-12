@@ -78,7 +78,7 @@ song has "(stereo)" after its name.
 
 Four more Aleck64 games play each song as one long recording, streamed from the cartridge: Hanabi de Doon! - Don-chan
 Puzzle, Hi Pai Paradise 2, Kurukuru Fever and Magical Tetris Challenge. They have no sequences to convert, so realsf2
-says so and writes nothing. usf's `usfrip` rips the music of all eleven Aleck64 games as the board plays it.
+says so and writes nothing.
 
 ## Drag and drop
 

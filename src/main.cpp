@@ -33,7 +33,7 @@ constexpr char kProgram[] = "realsf2";
 
 void Usage()
 {
-    std::puts(
+    std::string text =
         "realsf2: convert the music of Nintendo 64 games to MIDI, SoundFont 2 and SFZ.\n"
         "\n"
         "usage: realsf2 [options] <image or set> [...]\n"
@@ -47,15 +47,16 @@ void Usage()
         "\n"
         "options:\n"
         "  --output DIR   write to DIR (one image or set only)\n"
-        "  --only REGEX   convert matching sequence names (for example --only 0x19)\n"
-        "  --loops N      repeat the main loop N times (default 1)\n"
-        "                 MIDI loop markers are included for players that support them\n"
-        "  --seed N       initial game random state (default 0; Paper Mario only)\n"
-        "  --list         list sequences without converting\n"
-        "  --quiet        print errors only\n"
-        "  --version      show the version\n");
+        "  --only REGEX   convert matching sequence names (for example --only 0x19)\n";
+    text += frame::kLoopsHelp;
+    text += "  --seed N       initial game random state (default 0; Paper Mario only)\n";
+    text += frame::kListQuietVersionHelp;
+
+    std::puts(text.c_str());
 }
 
+// Reads the image or set at `input` (Input::Open). Returns nothing when no file or folder is there. The frame then
+// reports it.
 std::optional<Input> Open(const fs::path& input, const std::string&)
 {
     std::error_code error;
@@ -87,9 +88,10 @@ int main(int argc, char** argv)
         return input.Convert(index, named);
     };
 
-    auto run = [&](const std::vector<std::string>& args)
+    const auto run = [&converter](const std::vector<std::string>& args)
     {
         return frame::Run(args, converter);
     };
+
     return frame::RunMain(argc, argv, run);
 }

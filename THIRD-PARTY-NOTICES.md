@@ -8,7 +8,7 @@ the ZIP archives of ROM sets, is under the zlib licence.
 | seqlib, Copyright (c) 2026 the seqlib authors | MIT (`externals/seqlib/LICENSE`) | In `externals/seqlib`, a submodule, compiled into realsf2: the MIDI, SoundFont 2 and SFZ files and their samples. |
 | xsflib, Copyright (c) 2026 the xsflib authors | MIT (`externals/xsflib/LICENSE`) | In `externals/xsflib`, a submodule, compiled into realsf2: bounds-checked reads in either byte order, file input and output with UTF-8 paths, the printable form of names, the reader of ROM sets and their ZIP archives, the console's UTF-8 arguments and output, the Windows version resource and the macOS app's droplet script. |
 | ntdlib, Copyright (c) 2026 the ntdlib authors | MIT (`externals/ntdlib/LICENSE`) | In `externals/ntdlib`, a submodule, compiled into realsf2: the readers and models of the Nintendo 64's sound data, the conversion to MIDI, SoundFont 2 and SFZ, the per-game table, and the command line's options, help and messages. |
-| [zlib](https://zlib.net), Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler | zlib | Reads the ZIP archives of ROM sets, through xsflib. The installed copy is used if there is one, as on macOS. Otherwise v1.3.1 is downloaded when configuring and compiled into realsf2. |
+| [zlib](https://zlib.net), Copyright (C) 1995-2026 Jean-loup Gailly and Mark Adler | zlib | Reads the ZIP archives of ROM sets, through xsflib. The installed copy is used if there is one, as on macOS. Otherwise v1.4 is downloaded when configuring and compiled into realsf2. |
 
 Binary distributions must include the MIT notices of realsf2, seqlib, xsflib and ntdlib. Shipping `LICENSE` and this
 file does that. zlib's licence requires no notice in binaries. The licence texts follow.
@@ -105,7 +105,7 @@ SOFTWARE.
 ```
 Copyright notice:
 
- (C) 1995-2024 Jean-loup Gailly and Mark Adler
+ (C) 1995-2026 Jean-loup Gailly and Mark Adler
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
