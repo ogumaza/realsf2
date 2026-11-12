@@ -46,6 +46,7 @@ assumes an output rate of 22050 Hz. A game may use another rate.
 | Chameleon Twist | USA, Rev 1 | The SDK's sequence players |
 | Chameleon Twist 2 | USA | The SDK's sequence players |
 | Cruis'n World | USA | The SDK's sequence players |
+| Gex 64: Enter the Gecko | USA | The N64 Music Tools, in their early form |
 | GoldenEye 007 | USA | The SDK's sequence players |
 | Hey You, Pikachu! | USA | A player of standard MIDI files, on the SDK's synthesizer |
 | Mario Kart 64 | USA | EAD's engine, middle form |

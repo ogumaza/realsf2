@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.20)
 # realsf2 --version reports this version. The file properties of the Windows program and the Info.plist of the macOS
 # app show it too.
-project(realsf2 VERSION 1.1.1 LANGUAGES CXX)
+project(realsf2 VERSION 1.2.0 LANGUAGES CXX)
 
 # The submodules: seqlib writes the MIDI, SoundFont and SFZ files. ntdlib holds the conversion of the Nintendo 64's
 # sound data (ntdlib::sequence_export_n64) and the converters' command-line frame (ntdlib::sequence_export). xsflib
